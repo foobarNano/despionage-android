@@ -59,15 +59,21 @@ fun Content(collector: Collector, modifier: Modifier = Modifier) {
     ) {
         HeaderText("Despionage")
         SubheaderText("Android ${Build.VERSION.RELEASE} (${Build.VERSION.SECURITY_PATCH})")
+
+        val apps = collector.getInstalledApps()
+        val appsVisible = apps.filterNot { it.name.isNullOrEmpty() }
+
         TableView(
             data = listOf(
                 TableRow("Brand", collector.getDeviceBrand()),
                 TableRow("Model", collector.getDeviceModel()),
                 TableRow("Name", collector.getDeviceName()),
-                TableRow("Apps", collector.getInstalledApps()
-                    .filterNot { it.name.isNullOrEmpty() }
+                TableRow("Apps installed", apps.size.toString()),
+                TableRow("Hidden", (apps.size - appsVisible.size).toString()),
+                TableRow("Visible:", appsVisible.size.toString()),
+                TableRow("", appsVisible
                     .map { it.name.replace(Regex("(?<!\\.)_?App(lication)?"), "") }
-                    .map { if (it.length <= 28) it else it.replaceRange(0, it.length - 25, "...") }
+                    .map { if (it.length <= 32) it else it.replaceRange(0, it.length - 29, "...") }
                     .joinToString("\n")
                 )
             )
