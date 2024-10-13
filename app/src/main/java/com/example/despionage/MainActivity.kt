@@ -66,8 +66,8 @@ fun Content(collector: Collector, modifier: Modifier = Modifier) {
                 TableRow("Name", collector.getDeviceName()),
                 TableRow("Apps", collector.getInstalledApps()
                     .filterNot { it.name.isNullOrEmpty() }
-                    .map { it.name.split('.').last() }
-                    .map { if (it.length <= 28) it else it.replaceRange(25, it.length, "...") }
+                    .map { it.name.replace(Regex("(?<!\\.)_?App(lication)?"), "") }
+                    .map { if (it.length <= 28) it else it.replaceRange(0, it.length - 25, "...") }
                     .joinToString("\n")
                 )
             )
