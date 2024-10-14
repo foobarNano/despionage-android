@@ -12,6 +12,9 @@ interface Collector {
     fun getDeviceName(): String
     fun getDeviceBrand(): String
     fun getDeviceModel(): String
+    fun getDeviceSOC(): String
+    fun getDeviceUser(): String
+    fun getDevStatus(): Boolean
     fun getInstalledApps(): List<ApplicationInfo>
 
     companion object {
@@ -33,6 +36,27 @@ class DefaultCollector(val context: Context) : Collector {
 
     override fun getDeviceModel(): String {
         return Build.MODEL
+    }
+
+    override fun getDeviceSOC(): String {
+        @Suppress("DEPRECATION")
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            "${Build.SOC_MANUFACTURER} ${Build.SOC_MODEL}".capitalize(Locale.ROOT)
+        } else {
+            "Unknown"
+        }
+    }
+
+    override fun getDeviceUser(): String {
+        return Build.USER
+    }
+
+    override fun getDevStatus(): Boolean {
+        return Settings.Global.getInt(
+            context.contentResolver,
+            Settings.Global.DEVELOPMENT_SETTINGS_ENABLED,
+            0
+        ) != 0
     }
 
     @SuppressLint("QueryPermissionsNeeded")

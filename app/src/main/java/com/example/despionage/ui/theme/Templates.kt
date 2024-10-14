@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,7 @@ fun NormalText(
 @Composable
 fun BoldText(
     text: String,
+    textAlign: TextAlign = TextAlign.Unspecified,
     modifier: Modifier = Modifier
 ) {
     Text(
@@ -38,6 +40,24 @@ fun BoldText(
         color = MaterialTheme.colorScheme.primary,
         fontSize = TextSize.sp,
         fontWeight = FontWeight.Bold,
+        textAlign = textAlign,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun ItalicText(
+    text: String,
+    textAlign: TextAlign = TextAlign.Unspecified,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = text,
+        color = MaterialTheme.colorScheme.primary,
+        fontSize = TextSize.sp,
+        fontWeight = FontWeight.Normal,
+        fontStyle = FontStyle.Italic,
+        textAlign = textAlign,
         modifier = modifier
     )
 }
