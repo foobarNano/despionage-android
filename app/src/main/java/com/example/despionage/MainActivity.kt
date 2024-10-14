@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,11 +23,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.despionage.ui.theme.BoldText
 import com.example.despionage.ui.theme.DespionageTheme
-import com.example.despionage.ui.theme.HeaderText
 import com.example.despionage.ui.theme.NormalText
 import com.example.despionage.ui.theme.SubheaderText
 import com.example.despionage.utility.Collector
@@ -57,7 +58,11 @@ fun Content(collector: Collector, modifier: Modifier = Modifier) {
             .fillMaxHeight()
             .wrapContentHeight()
     ) {
-        HeaderText("Despionage")
+        Image(
+            painter = painterResource(id = R.drawable.logo_full),
+            contentDescription = "Despionage",
+            modifier = modifier.padding(32.dp, 0.dp)
+        )
         SubheaderText("Android ${Build.VERSION.RELEASE} (${Build.VERSION.SECURITY_PATCH})")
 
         val apps = collector.getInstalledApps()
