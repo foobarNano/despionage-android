@@ -65,9 +65,9 @@ fun Content(collector: Collector, modifier: Modifier = Modifier) {
 
         TableView(
             data = listOf(
+                TableRow("Name", collector.getDeviceName()),
                 TableRow("Brand", collector.getDeviceBrand()),
                 TableRow("Model", collector.getDeviceModel()),
-                TableRow("Name", collector.getDeviceName()),
                 TableRow("Apps installed", apps.size.toString()),
                 TableRow("Hidden", (apps.size - appsVisible.size).toString()),
                 TableRow("Visible:", appsVisible.size.toString()),
