@@ -6,28 +6,52 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.Settings
+import android.view.WindowManager
 import java.util.Locale
 
-interface Collector {
-    fun getDeviceName(): String
+interface HardwareCollector {
     fun getDeviceBrand(): String
     fun getDeviceModel(): String
     fun getDeviceSOC(): String
+    fun getScreenHeight(): Int
+    fun getScreenWidth(): Int
+}
+
+interface SystemCollector {
+
+}
+
+interface SettingCollector {
+    fun getDeviceName(): String
     fun getDeviceUser(): String
     fun getDevStatus(): Boolean
-    fun getInstalledApps(): List<ApplicationInfo>
+}
 
+interface UsageCollector {
+    fun getInstalledApps(): List<ApplicationInfo>
+}
+
+class Collector (
+    val Hardware: HardwareCollector,
+    val System: SystemCollector,
+    val Settings: SettingCollector,
+    val Usage: UsageCollector
+) {
     companion object {
         fun getInstance(context: Context): Collector {
-            return DefaultCollector(context)
+            return Collector(
+                DfHardwareCollector(context),
+                DfSystemCollector(),
+                DfSettingCollector(context),
+                DfUsageCollector(context)
+            )
         }
     }
 }
 
-class DefaultCollector(val context: Context) : Collector {
-    override fun getDeviceName(): String {
-        return Settings.Global.getString(context.contentResolver, "device_name") ?: "Unknown Device"
-    }
+class DfHardwareCollector(private val context: Context) : HardwareCollector {
+
+    private var wm: WindowManager? = null
 
     override fun getDeviceBrand(): String {
         @Suppress("DEPRECATION")
@@ -47,6 +71,37 @@ class DefaultCollector(val context: Context) : Collector {
         }
     }
 
+    override fun getScreenHeight(): Int {
+        if (wm == null) wm = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            wm!!.currentWindowMetrics.bounds.height()
+        } else {
+            wm!!.defaultDisplay.height
+        }
+    }
+
+    override fun getScreenWidth(): Int {
+        if (wm == null) wm = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            wm!!.currentWindowMetrics.bounds.width()
+        } else {
+            wm!!.defaultDisplay.width
+        }
+    }
+}
+
+class DfSystemCollector: SystemCollector {
+
+}
+
+class DfSettingCollector(private val context: Context) : SettingCollector {
+
+    override fun getDeviceName(): String {
+        return Settings.Global.getString(context.contentResolver, "device_name") ?: "Unknown Device"
+    }
+
     override fun getDeviceUser(): String {
         return Build.USER
     }
@@ -58,6 +113,9 @@ class DefaultCollector(val context: Context) : Collector {
             0
         ) != 0
     }
+}
+
+class DfUsageCollector(private val context: Context) : UsageCollector {
 
     @SuppressLint("QueryPermissionsNeeded")
     override fun getInstalledApps(): List<ApplicationInfo> {
