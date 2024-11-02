@@ -1,5 +1,6 @@
 package com.example.despionage
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,9 +16,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -122,12 +124,10 @@ fun Fact(
     iconDesc: String = icon.toString(),
     flipped: Boolean = false
 ) {
-    val modifier = Modifier
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(20.dp)
+            .padding(20.dp, 0.dp, 20.dp, 20.dp)
             .background(
                 color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(16.dp)
@@ -146,7 +146,7 @@ fun Fact(
                     Image(
                         painter = icon,
                         contentDescription = iconDesc,
-                        modifier = modifier
+                        modifier = Modifier
                             .size(80.dp, 80.dp)
                     )
 
@@ -181,7 +181,7 @@ fun Fact(
                     Image(
                         painter = icon,
                         contentDescription = iconDesc,
-                        modifier = modifier
+                        modifier = Modifier
                             .size(80.dp, 80.dp)
                     )
                 }
@@ -189,7 +189,7 @@ fun Fact(
 
             NormalText(
                 text = description,
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
             )
 
